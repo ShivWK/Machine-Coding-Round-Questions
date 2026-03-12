@@ -1,0 +1,120 @@
+.toast {
+    padding: 15px;
+    margin-block: 15px;
+    margin: 10px;
+    color: white;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: fit-content;
+}
+
+.slide {
+    animation: slide forwards ease 0.3s;
+}
+
+@keyframes slide {
+    from {
+        transform: translateY(25px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.pop {
+    animation: pop forwards ease 0.3s;
+}
+
+@keyframes pop {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(100%);
+        opacity: 1;
+    }
+}
+
+.success {
+    background-color: #40c944;
+}
+
+.info {
+    background-color: #2196f3;
+}
+
+.warning {
+    background-color: #ec9615;
+}
+
+.error {
+    background-color: #e03d32;
+}
+
+.closeBtn {
+    margin-left: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    border-radius: 100%;
+    padding: 4px;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: #504f4f8f;
+    }
+}
+
+.toast-portal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.top-right {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.bottom-right {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.top-left {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.bottom-left {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+}
+
+.top-mid {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.bottom-mid {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
