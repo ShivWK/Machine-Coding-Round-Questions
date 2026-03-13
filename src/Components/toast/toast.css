@@ -1,13 +1,47 @@
 .toast {
-    padding-block : 10px;
-    padding-inline: 15px;
+    position: relative;
+    padding-block: 8px;
+    padding-inline: 10px;
     margin-block: 15px;
     color: white;
     display: flex;
     align-items: center;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    width: fit-content;
+    width: 300px;
+    overflow: hidden;
+}
+
+.toast-msg {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    overflow: hidden;
+}
+
+.progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    width: 100%;
+    background-color: white;
+    animation: progress linear forwards;
+}
+
+.toast:hover .progress {
+    animation-play-state: paused;
+}
+
+@keyframes progress {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0;
+    }
 }
 
 .slide {
@@ -37,7 +71,7 @@
     }
 
     to {
-        transform: scale(100%);
+        transform: scale(1);
         opacity: 1;
     }
 }
@@ -59,7 +93,7 @@
 }
 
 .closeBtn {
-    margin-left: 20px;
+    margin-left: auto;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -68,15 +102,16 @@
     border-radius: 100%;
     padding: 4px;
     transition: background-color 0.15s ease;
+    flex-shrink: 0;
 
     &:hover {
         background-color: #6160608f;
     }
 }
 
-.toast-msg {
-    max-width: 320px;
-    word-wrap: break-word;
+.icon {
+    margin-right: 10px;
+    flex-shrink: 0;
 }
 
 .toast-portal {
@@ -87,38 +122,38 @@
 }
 
 .top-right {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 20px;
 }
 
 .bottom-right {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     right: 20px;
 }
 
 .top-left {
-    position: absolute;
+    position: fixed;
     top: 20px;
     left: 20px;
 }
 
 .bottom-left {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     left: 20px;
 }
 
 .top-mid {
-    position: absolute;
+    position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
 }
 
 .bottom-mid {
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
