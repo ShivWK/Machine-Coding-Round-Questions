@@ -1,7 +1,7 @@
 import useToast from "../../hooks/useToast"
 
 const Toast = () => {
-  const { ToastContainer, triggerToast } = useToast("bottom-right")
+  const { ToastContainer, triggerToast } = useToast("bottom-mid")
 
   const clickHandler = (type, animation, message) => {
     const toast = {

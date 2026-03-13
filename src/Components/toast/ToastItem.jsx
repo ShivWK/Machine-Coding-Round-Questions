@@ -50,7 +50,9 @@ const ToastItem = memo(({
     <div
       onMouseEnter={pauseTimer}
       onMouseLeave={resumeTimer}
-      className={`${type} ${animation} toast`} role={(type === "success" || type === "info") ? "status" : "alert"} >
+      className={`${type} ${animation} toast`}
+      role={(type === "success" || type === "info") ? "status" : "alert"}
+    >
       {icons[type]}
       <p className="toast-msg">{message}</p>
 
