@@ -1,7 +1,7 @@
 .toast {
-    padding: 15px;
+    padding-block : 10px;
+    padding-inline: 15px;
     margin-block: 15px;
-    margin: 10px;
     color: white;
     display: flex;
     align-items: center;
@@ -70,8 +70,13 @@
     transition: background-color 0.15s ease;
 
     &:hover {
-        background-color: #504f4f8f;
+        background-color: #6160608f;
     }
+}
+
+.toast-msg {
+    max-width: 320px;
+    word-wrap: break-word;
 }
 
 .toast-portal {
