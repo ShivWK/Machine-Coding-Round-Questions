@@ -1,0 +1,9 @@
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.buttons__btn {
+    cursor: pointer;
+}

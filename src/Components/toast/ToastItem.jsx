@@ -2,13 +2,11 @@ import { AiOutlineCheckCircle, AiOutlineClose, AiOutlineCloseCircle, AiOutlineIn
 import { memo, useEffect, useRef } from "react";
 import "./toast.css"
 
-const iconStyle = { marginRight: "10px" }
-
 const icons = {
-  success: <AiOutlineCheckCircle className="icon" size={23.5} style={iconStyle} />,
-  info: <AiOutlineInfoCircle className="icon" size={23.5} style={iconStyle} />,
-  warning: <AiOutlineWarning className="icon" size={23.5} style={iconStyle} />,
-  error: <AiOutlineCloseCircle className="icon" size={23.5} style={iconStyle} />
+  success: <AiOutlineCheckCircle className="icon" size={23.5} />,
+  info: <AiOutlineInfoCircle className="icon" size={23.5} />,
+  warning: <AiOutlineWarning className="icon" size={23.5} />,
+  error: <AiOutlineCloseCircle className="icon" size={23.5} />
 }
 
 const ToastItem = memo(({
