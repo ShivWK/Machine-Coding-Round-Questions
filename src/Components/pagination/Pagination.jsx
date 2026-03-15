@@ -9,39 +9,28 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
     const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
     const [pageSize, setPageSize] = useState(rowPerPage)
 
+    // console.log("length", data.length, data)
+
     const startIndex = (currentPage * pageSize) - pageSize;
     const lastIndex = currentPage * pageSize;
     const totalNumberOfPages = Math.ceil(data.length / pageSize);
     const pageNumberButtons = Array.from({ length: totalNumberOfPages }, (_, i) => i + 1);
 
-    // let firstPageIndex = currentPage - 2;
-    // let lastPageIndex = currentPage + 3;
+    let firstPageIndex = currentPage - 2;
+    let lastPageIndex = currentPage + 3;
 
-    // if (firstPageIndex <= 0) {
-    //     firstPageIndex = 1;
-    //     lastPageIndex = Math.min(totalNumberOfPages - 1, firstPageIndex + MAX_NUMBER_OF_VISIBLE_BUTTONS);
-    // }
-
-    // if (lastPageIndex >= totalNumberOfPages) {
-    //     lastPageIndex = totalNumberOfPages - 1
-    //     firstPageIndex = Math.max(1, totalNumberOfPages - MAX_NUMBER_OF_VISIBLE_BUTTONS - 1)
-    // }
-
-    let firstPageIndex = currentPage - Math.floor(MAX_NUMBER_OF_VISIBLE_BUTTONS / 2);
-    let lastPageIndex = currentPage + Math.floor(MAX_NUMBER_OF_VISIBLE_BUTTONS / 2);
-
-    if (firstPageIndex < 1) {
+    if (firstPageIndex <= 0) {
         firstPageIndex = 1;
-        lastPageIndex = Math.min(totalNumberOfPages, MAX_NUMBER_OF_VISIBLE_BUTTONS);
+        lastPageIndex = Math.min(totalNumberOfPages - 1, firstPageIndex + MAX_NUMBER_OF_VISIBLE_BUTTONS);
     }
 
-    if (lastPageIndex > totalNumberOfPages) {
-        lastPageIndex = totalNumberOfPages;
-        firstPageIndex = Math.max(1, totalNumberOfPages - MAX_NUMBER_OF_VISIBLE_BUTTONS + 1)
+    if (lastPageIndex >= totalNumberOfPages) {
+        lastPageIndex = totalNumberOfPages - 1
+        firstPageIndex = Math.max(1, totalNumberOfPages - MAX_NUMBER_OF_VISIBLE_BUTTONS - 1)
     }
 
     const visibleData = data.slice(startIndex, lastIndex)
-    const visiblePageButtons = pageNumberButtons.slice(firstPageIndex - 1, lastPageIndex)
+    const visiblePageButtons = pageNumberButtons.slice(firstPageIndex, lastPageIndex)
 
     const navigateButtonClickHandler = (pg) => {
         setCurrentPage(prv => prv + pg)
@@ -58,8 +47,8 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
     }
 
     return (
-        <div className={`pagination ${className}`}>
-            <div className="pagination__content">
+        <div className={`${styles["pagination"]} ${styles[className]}`}>
+            <div className={`${styles["pagination__content"]}`}>
                 {visibleData.map((data, i) => <div key={i}>
                     {renderRow(data)}
                 </div>)}
@@ -74,7 +63,7 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
                     <option value={"50"}>50</option>
                 </select>
                 <button
-                    className={`${styles["buttons__btn"]}`}
+                    className={`${styles["buttons__btn"]} ${currentPage === 1 && styles["buttons__btn-active"] }`}
                     disabled={currentPage === 1}
                     onClick={() => pageBtnClickHandler(1)}
                 >
@@ -95,7 +84,7 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
                 <div className={`${styles['buttons__dynamic-container']}`}>
                     {visiblePageButtons.map((pg, i) => {
                         return <button
-                            className={`${styles["buttons__btn"]}`}
+                            className={`${styles["buttons__btn"]} ${currentPage === pg && styles["buttons__btn-active"] }`}
                             key={i}
                             disabled={pg === currentPage}
                             onClick={() => pageBtnClickHandler(pg)}
@@ -117,7 +106,7 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
                     next
                 </button>
                 <button
-                    className={`${styles["buttons__btn"]}`}
+                    className={`${styles["buttons__btn"]} ${currentPage === totalNumberOfPages && styles["buttons__btn-active"]}`}
                     disabled={currentPage === totalNumberOfPages}
                     onClick={() => pageBtnClickHandler(totalNumberOfPages)}
                 >

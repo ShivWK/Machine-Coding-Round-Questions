@@ -1,5 +1,4 @@
-{
-    "products": [
+ [
         {
             "id": 1,
             "title": "Essence Mascara Lash Princess",
@@ -1796,8 +1795,5 @@
             ],
             "thumbnail": "https://cdn.dummyjson.com/product-images/groceries/kiwi/thumbnail.webp"
         }
-    ],
-    "total": 194,
-    "skip": 0,
-    "limit": 30
-}
+    ]
+    
