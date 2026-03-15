@@ -1,7 +1,7 @@
 import Toast from "./components/toast/Toast";
 import Pagination from "./components/pagination/Pagination";
 
-const dataToRender = Array.from({ length: 200 }, (_, i) => i);
+const dataToRender = Array.from({ length: 500 }, (_, i) => i);
 
 const renderRow = (d) => {
   return <>

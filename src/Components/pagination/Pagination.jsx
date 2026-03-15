@@ -14,19 +14,34 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
     const totalNumberOfPages = Math.ceil(data.length / pageSize);
     const pageNumberButtons = Array.from({ length: totalNumberOfPages }, (_, i) => i + 1);
 
-    let firstPageIndex = currentPage - 2;
-    let lastPageIndex = currentPage + 3;
+    // let firstPageIndex = currentPage - 2;
+    // let lastPageIndex = currentPage + 3;
 
-    if (firstPageIndex <= 0) {
+    // if (firstPageIndex <= 0) {
+    //     firstPageIndex = 1;
+    //     lastPageIndex = Math.min(totalNumberOfPages - 1, firstPageIndex + MAX_NUMBER_OF_VISIBLE_BUTTONS);
+    // }
+
+    // if (lastPageIndex >= totalNumberOfPages) {
+    //     lastPageIndex = totalNumberOfPages - 1
+    //     firstPageIndex = Math.max(1, totalNumberOfPages - MAX_NUMBER_OF_VISIBLE_BUTTONS - 1)
+    // }
+
+    let firstPageIndex = currentPage - Math.floor(MAX_NUMBER_OF_VISIBLE_BUTTONS / 2);
+    let lastPageIndex = currentPage + Math.floor(MAX_NUMBER_OF_VISIBLE_BUTTONS / 2);
+
+    if (firstPageIndex < 1) {
         firstPageIndex = 1;
+        lastPageIndex = Math.min(totalNumberOfPages, MAX_NUMBER_OF_VISIBLE_BUTTONS);
     }
 
-    if (lastPageIndex >= totalNumberOfPages) {
-        lastPageIndex = totalNumberOfPages - 2
+    if (lastPageIndex > totalNumberOfPages) {
+        lastPageIndex = totalNumberOfPages;
+        firstPageIndex = Math.max(1, totalNumberOfPages - MAX_NUMBER_OF_VISIBLE_BUTTONS + 1)
     }
 
     const visibleData = data.slice(startIndex, lastIndex)
-    const visiblePageButtons = pageNumberButtons.slice(firstPageIndex, lastPageIndex)
+    const visiblePageButtons = pageNumberButtons.slice(firstPageIndex - 1, lastPageIndex)
 
     const navigateButtonClickHandler = (pg) => {
         setCurrentPage(prv => prv + pg)
@@ -34,6 +49,12 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
 
     const pageBtnClickHandler = (pg) => {
         setCurrentPage(pg)
+    }
+
+    const changeHandler = (e) => {
+        const newSize = Number(e.target.value);
+        setPageSize(newSize);
+        setCurrentPage(1)
     }
 
     return (
@@ -45,7 +66,7 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
             </div>
 
             <div className={`${styles["buttons"]}`}>
-                <select onChange={(e) => setPageSize(Number(e.target.value))}>
+                <select className={`${styles["buttons__select"]}`} onChange={changeHandler}>
                     <option value={"10"}>10</option>
                     <option value={"20"}>20</option>
                     <option value={"30"}>30</option>
@@ -67,7 +88,11 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
                     prev
                 </button>
 
-                <div>
+                {firstPageIndex > 1 && (
+                    <span className={styles.ellipsis}>...</span>
+                )}
+
+                <div className={`${styles['buttons__dynamic-container']}`}>
                     {visiblePageButtons.map((pg, i) => {
                         return <button
                             className={`${styles["buttons__btn"]}`}
@@ -79,6 +104,10 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
                         </button>
                     })}
                 </div>
+
+                {lastPageIndex < totalNumberOfPages - 1 && (
+                    <span className={styles.ellipsis}>...</span>
+                )}
 
                 <button
                     className={`${styles["buttons__btn"]}`}
