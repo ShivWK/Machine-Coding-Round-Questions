@@ -5,11 +5,9 @@ const PAGE_SIZE = 10;
 const DEFAULT_PAGE = 1;
 const MAX_NUMBER_OF_VISIBLE_BUTTONS = 5;
 
-const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" }) => {
+const PaginationFirst = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" }) => {
     const [currentPage, setCurrentPage] = useState(DEFAULT_PAGE);
     const [pageSize, setPageSize] = useState(rowPerPage)
-
-    // console.log("length", data.length, data)
 
     const startIndex = (currentPage * pageSize) - pageSize;
     const lastIndex = currentPage * pageSize;
@@ -117,4 +115,4 @@ const Pagination = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = "" })
     )
 }
 
-export default Pagination;
+export default PaginationFirst;
