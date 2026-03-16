@@ -13,9 +13,28 @@ function PaginationSecondParent() {
     const [totalPages, setTotalPages] = useState(1);
     const [pageSize, setPageSize] = useState(10)
     const abortController = useRef(null);
+    const pageCache = useRef(new Map());
+    const CACHE_LIMIT = 5;
+
+    const updateCache = (pg, data) => {
+        if (pageCache.current.size >= CACHE_LIMIT) {
+            const firstKEy = pageCache.current.keys().next().value;
+            pageCache.current.delete(firstKEy);
+        }
+
+        pageCache.current.set(pg, data)
+    }
+
 
     useEffect(() => {
+        console.log(pageCache.current)
+
         const call = async () => {
+            if (pageCache.current.has(currentPage)) {
+                setProducts(pageCache.current.get(currentPage));
+                return
+            }
+
             if (abortController.current) {
                 abortController.current.abort()
             }
@@ -37,6 +56,8 @@ function PaginationSecondParent() {
             setTotalPages(totalNumberOfPages);
             setLoading(false)
             setProducts(result.products)
+
+            updateCache(currentPage, result.products)
             //console.log(result)
         }
 
