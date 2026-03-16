@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PaginationSecond from "./PaginationSecond";
 import Product from './Product';
 
@@ -12,11 +12,21 @@ function PaginationSecondParent() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [pageSize, setPageSize] = useState(10)
+    const abortController = useRef(null);
 
     useEffect(() => {
         const call = async () => {
+            if (abortController.current) {
+                abortController.current.abort()
+            }
+
+            const controller = new AbortController();
+            abortController.current = controller;
+
             setLoading(true)
-            const response = await fetch(`https://dummyjson.com/products?limit=${pageSize}&skip=${(currentPage - 1) * 10}`);
+            const response = await fetch(`https://dummyjson.com/products?limit=${pageSize}&skip=${(currentPage - 1) * 10}`, {
+                signal: controller.signal
+            });
 
             if (!response.ok) {
                 console.log("Something went wrong")
@@ -27,7 +37,7 @@ function PaginationSecondParent() {
             setTotalPages(totalNumberOfPages);
             setLoading(false)
             setProducts(result.products)
-              console.log(result)
+            //console.log(result)
         }
 
         call()
