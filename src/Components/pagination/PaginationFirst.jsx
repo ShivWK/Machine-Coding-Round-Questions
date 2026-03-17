@@ -52,22 +52,32 @@ const PaginationFirst = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = 
                 </div>)}
             </div>
 
-            <div className={`${styles["buttons"]}`}>
-                <select className={`${styles["buttons__select"]}`} onChange={changeHandler}>
-                    <option value={"10"}>10</option>
-                    <option value={"20"}>20</option>
-                    <option value={"30"}>30</option>
-                    <option value={"40"}>40</option>
-                    <option value={"50"}>50</option>
+            <nav
+                className={`${styles["buttons"]}`}
+                aria-label='Pagination Navigation'
+            >
+                {/* Screen readers will announce: “Navigation region: Pagination Navigation” */}
+                <select
+                    aria-label='Items per page'
+                    value={pageSize}
+                    className={`${styles["buttons__select"]}`} onChange={changeHandler}
+                >
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={30}>30</option>
+                    <option value={40}>40</option>
+                    <option value={50}>50</option>
                 </select>
                 <button
-                    className={`${styles["buttons__btn"]} ${currentPage === 1 && styles["buttons__btn-active"] }`}
+                    aria-label="Go to first page"
+                    className={`${styles["buttons__btn"]} ${currentPage === 1 && styles["buttons__btn-active"]}`}
                     disabled={currentPage === 1}
                     onClick={() => pageBtnClickHandler(1)}
                 >
                     1
                 </button>
                 <button
+                    aria-label="Go to previous page"
                     className={`${styles["buttons__btn"]}`}
                     disabled={currentPage === 1}
                     onClick={() => navigateButtonClickHandler(-1)}
@@ -76,14 +86,16 @@ const PaginationFirst = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = 
                 </button>
 
                 {firstPageIndex > 1 && (
-                    <span className={styles.ellipsis}>...</span>
+                    <span aria-hidden='true' className={styles.ellipsis}>...</span>
                 )}
 
                 <div className={`${styles['buttons__dynamic-container']}`}>
-                    {visiblePageButtons.map((pg, i) => {
+                    {visiblePageButtons.map((pg) => {
                         return <button
-                            className={`${styles["buttons__btn"]} ${currentPage === pg && styles["buttons__btn-active"] }`}
-                            key={i}
+                            key={pg}
+                            aria-label={currentPage === pg ? `page ${pg}` : `Go to page ${pg}`}
+                            aria-current={currentPage === pg ? "page" : undefined}
+                            className={`${styles["buttons__btn"]} ${currentPage === pg && styles["buttons__btn-active"]}`}
                             disabled={pg === currentPage}
                             onClick={() => pageBtnClickHandler(pg)}
                         >
@@ -93,10 +105,11 @@ const PaginationFirst = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = 
                 </div>
 
                 {lastPageIndex < totalNumberOfPages - 1 && (
-                    <span className={styles.ellipsis}>...</span>
+                    <span aria-hidden="true" className={styles.ellipsis}>...</span>
                 )}
 
                 <button
+                    aria-label="Go to next page"
                     className={`${styles["buttons__btn"]}`}
                     disabled={currentPage === totalNumberOfPages}
                     onClick={() => navigateButtonClickHandler(1)}
@@ -104,12 +117,17 @@ const PaginationFirst = ({ data, renderRow, rowPerPage = PAGE_SIZE, className = 
                     next
                 </button>
                 <button
+                    aria-label={`Go to last page, page ${totalNumberOfPages}`}
                     className={`${styles["buttons__btn"]} ${currentPage === totalNumberOfPages && styles["buttons__btn-active"]}`}
                     disabled={currentPage === totalNumberOfPages}
                     onClick={() => pageBtnClickHandler(totalNumberOfPages)}
                 >
                     {totalNumberOfPages}
                 </button>
+            </nav>
+
+            <div aria-live="polite" className={`${styles["sr_only"]}`}>
+                page {currentPage} loaded
             </div>
         </div>
     )

@@ -73,3 +73,10 @@
     width: auto;
     /* border: 2px solid white; */
 }
+
+.sr_only {
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}
