@@ -58,7 +58,6 @@ function PaginationSecondParent() {
             setProducts(result.products)
 
             updateCache(currentPage, result.products)
-            //console.log(result)
         }
 
         call()
