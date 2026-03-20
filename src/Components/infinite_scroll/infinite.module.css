@@ -20,3 +20,10 @@
     font-size: large;
     margin-block: 10px;
 }
+
+.sr-only {
+    position: absolute;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}

@@ -75,19 +75,26 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
   }, [loading, loadData])
 
   return (<>
-    <div className={`${styles["infinite__container"]} ${className}`}>
+    <div role="list" className={`${styles["infinite__container"]} ${className}`}>
       {
         items.map((data, i) => {
-          return <div key={i}>{
-            renderItem(data)
-          }
+          return <div
+            role="listItem"
+            key={i}>{
+              renderItem(data)
+            }
           </div>
         })
       }
     </div>
 
-    {loading && <p className={`${styles["infinite__loading"]}`}>Loading...</p>}
-    {!hasMore && <p className={`${styles["infinite__hasMore"]}`}>No More Products</p>}
+    {loading && <p role="status" className={`${styles["infinite__loading"]}`}>Loading...</p>}
+    {!hasMore && <p role="status" className={`${styles["infinite__hasMore"]}`}>No More Products</p>}
+
+    <div aria-live="polite" aria-atomic="true" className={`${styles["sr-only"]}`}>
+      {loading && "Loading more items"}
+      {!hasMore && "No more items to load"}
+    </div>
   </>
   )
 }
