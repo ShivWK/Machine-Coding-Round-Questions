@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import styles from "./infinite.module.css";
 
 const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className = '' }) => {
@@ -6,7 +6,7 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [ticking, setTicking] = useState(false);
+  const ticking = useRef(false);
 
   const loadData = useCallback(async () => {
     if (loading || !hasMore) return;
@@ -35,9 +35,22 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
   }, [])
 
   useEffect(() => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = window.innerHeight;
+
+    if (scrollHeight <= clientHeight && !loading && hasMore) {
+      const call = async () => {
+        loadData()
+      }
+
+      call()
+    }
+  }, [loading, hasMore, loadData])
+
+  useEffect(() => {
     const handleScroll = () => {
-      if (ticking) return;
-      setTicking(true);
+      if (ticking.current) return;
+      ticking.current = true;
 
       requestAnimationFrame(() => {
         const scrollHeight = document.documentElement.scrollHeight;
@@ -45,13 +58,12 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
         const scrollTop = window.scrollY;
 
         const remaining = scrollHeight - (scrollTop + clientHeight);
-        console.log("remaining", remaining)
 
         if (remaining < 200 && !loading) {
           loadData()
         }
 
-        setTicking(false);
+        ticking.current = false;
       })
     }
 
@@ -60,7 +72,7 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
     return () => {
       window.removeEventListener("scroll", handleScroll)
     }
-  }, [loading, ticking, loadData])
+  }, [loading, loadData])
 
   return (<>
     <div className={`${styles["infinite__container"]} ${className}`}>
@@ -74,12 +86,12 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
       }
     </div>
 
-    {loading && <p>Loading...</p>}
-    {!hasMore && <p>No More Products</p>}
+    {loading && <p className={`${styles["infinite__loading"]}`}>Loading...</p>}
+    {!hasMore && <p className={`${styles["infinite__hasMore"]}`}>No More Products</p>}
   </>
   )
 }
 
 export default InfiniteScrollFirst;
 
-// Learn concurrent render
+// Learn cascade render

@@ -5,5 +5,18 @@
     max-width: 1200px;
     margin-inline: auto;
     gap: 5px;
-    /* border: 2px solid black; */
+}
+
+.infinite__loading {
+    text-align: center;
+    font-weight: 600;
+    font-size: large;
+    margin-block: 10px;
+}
+
+.infinite__hasMore {
+    text-align: center;
+    font-weight: 600;
+    font-size: large;
+    margin-block: 10px;
 }
