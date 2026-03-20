@@ -1,5 +1,6 @@
 import Product from "../pagination/Product";
 import InfiniteScrollFirst from "./InfiniteScrollFirst";
+import InfiniteScrollSecond from "./InfiniteScrollSecond";
 
 const fetchData = async ({ currentPage, pageSize }) => {
     try {
@@ -29,10 +30,16 @@ const renderItem = (data) => {
 
 const InfiniteScrollParent = () => {
     return (
-        <InfiniteScrollFirst
+        // <InfiniteScrollFirst
+        //     fetchData={fetchData}
+        //     renderItem={renderItem}
+        //     pageSize={10}
+        // />
+
+        <InfiniteScrollSecond
             fetchData={fetchData}
             renderItem={renderItem}
-            pageSize={10}
+            pageSize={20}
         />
     )
 }
