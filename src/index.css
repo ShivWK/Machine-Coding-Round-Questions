@@ -1,7 +1,12 @@
 body {
     background-color: rgb(48, 47, 47);
+    /* border: 2px solid red; */
 }
 
 p, span {
     color: white;
+}
+
+html {
+    /* border: 2px solid yellow; */
 }

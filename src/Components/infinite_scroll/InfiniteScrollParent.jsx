@@ -32,7 +32,7 @@ const InfiniteScrollParent = () => {
         <InfiniteScrollFirst
             fetchData={fetchData}
             renderItem={renderItem}
-            pageSize={10}
+            pageSize={20}
         />
     )
 }

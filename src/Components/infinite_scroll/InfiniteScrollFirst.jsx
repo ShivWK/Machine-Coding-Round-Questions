@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import styles from "./infinite.module.css";
 
 const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className = '' }) => {
@@ -6,8 +6,9 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [ticking, setTicking] = useState(false);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (loading || !hasMore) return;
     setLoading(true)
 
@@ -23,9 +24,7 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
     setLoading(false)
     setHasMore(more);
     setCurrentPage(prv => prv + 1)
-  }
-
-  console.log(items)
+  }, [fetchData, loading, hasMore, currentPage, pageSize])
 
   useEffect(() => {
     const call = async () => {
@@ -35,18 +34,52 @@ const InfiniteScrollFirst = ({ fetchData, renderItem, pageSize = 10, className =
     call()
   }, [])
 
-  return (
+  useEffect(() => {
+    const handleScroll = () => {
+      if (ticking) return;
+      setTicking(true);
+
+      requestAnimationFrame(() => {
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = window.innerHeight;
+        const scrollTop = window.scrollY;
+
+        const remaining = scrollHeight - (scrollTop + clientHeight);
+        console.log("remaining", remaining)
+
+        if (remaining < 200 && !loading) {
+          loadData()
+        }
+
+        setTicking(false);
+      })
+    }
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [loading, ticking, loadData])
+
+  return (<>
     <div className={`${styles["infinite__container"]} ${className}`}>
       {
-        items.map((data) => {
-          return <div key={data.id}>{
+        items.map((data, i) => {
+          return <div key={i}>{
             renderItem(data)
           }
           </div>
         })
       }
     </div>
+
+    {loading && <p>Loading...</p>}
+    {!hasMore && <p>No More Products</p>}
+  </>
   )
 }
 
 export default InfiniteScrollFirst;
+
+// Learn concurrent render
