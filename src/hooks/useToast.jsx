@@ -8,8 +8,8 @@ const useToast = (position = "top-right") => {
     const portalRoot = document.getElementById("toast-root");
 
     const triggerToast = ({ message, type, duration, animation }) => {
-        const isDuplicate = toasts.some(t => t.message === message);
-        if (isDuplicate) return;
+        // const isDuplicate = toasts.some(t => t.message === message);
+        // if (isDuplicate) return;
         const id = crypto.randomUUID()
         const newToast = {
             id,
