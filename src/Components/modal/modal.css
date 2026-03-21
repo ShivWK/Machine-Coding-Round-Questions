@@ -1,0 +1,141 @@
+.dialog__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn linear forwards 0.2s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fadeOut__animation {
+    animation: fadeOut linear forwards 0.2s;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+.dialog__box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    padding: 1rem;
+    padding-top: 3rem;
+    background-color: white;
+    color: rgb(39, 39, 39);
+    max-width: 40vw;
+    max-height: 60vh;
+    overflow: auto;
+    border-radius: 6px;
+
+    p {
+        color: black;
+    }
+}
+
+.popIn__animation {
+    animation: popIn linear forwards 0.2s;
+}
+
+@keyframes popIn {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.popOut__animation {
+    animation: popOut linear forwards 0.2s !important;
+}
+
+@keyframes popOut {
+    from {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+}
+
+.slideIn__animation {
+    animation: slideIn linear forwards 0.2s;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translate(-50%, -25%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+}
+
+.slideOut__animation {
+    animation: slideOut linear forwards 0.2s !important;
+}
+
+@keyframes slideOut {
+    from {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+
+    to {
+        transform: translate(-50%, -25%);
+        opacity: 0;
+    }
+}
+
+.dialog__heading {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.dialog__closeBtn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    border-radius: 100%;
+    padding: 4px;
+    transition: all 0.15s ease;
+
+    &:hover {
+        background-color: #6160608f;
+        color: white;
+    }
+}
