@@ -3,10 +3,14 @@ body {
     /* border: 2px solid red; */
 }
 
-p, span {
+p,
+span {
     color: white;
 }
 
-html {
-    /* border: 2px solid yellow; */
+.position_modal {
+    position: fixed !important;
+    top: 20px !important;
+    left: 20px !important;
+    background-color: aqua !important;
 }

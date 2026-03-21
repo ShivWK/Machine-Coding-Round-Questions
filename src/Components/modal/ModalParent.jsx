@@ -4,6 +4,10 @@ import Modal from "./Modal"
 const ModalParent = () => {
     const [openModal, setOpenModal] = useState(false);
 
+    const style = {
+        backgroundColor: "red",
+    }
+
     return (
         <>
             <button onClick={() => setOpenModal(true)}>open</button>
@@ -11,6 +15,8 @@ const ModalParent = () => {
                 open={openModal}
                 onClose={() => setOpenModal(false)}
                 title={"New Modal Box"}
+                animation="slide"
+                style={style}
             >
                 <div>
                     <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. A voluptates eos tempora eaque perferendis fuga quas! Beatae dolore sequi architecto!</p>

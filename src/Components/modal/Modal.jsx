@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import "./modal.css";
+import "./modalStyle.css";
 
 const Modal = ({
     open,
     onClose,
     children,
-    className,
-    animation = "slide",
+    style,
+    animation = "pop",
     title
 }) => {
     const lastFocusedElement = useRef(null);
@@ -92,6 +92,18 @@ const Modal = ({
         };
     }, [allowOutsideAccess]);
 
+    const getModalRoot = () => {
+        let root = document.getElementById("modal-root");
+
+        if (!root) {
+            root = document.createElement("div");
+            root.id = "modal-root";
+            document.body.appendChild(root);
+        }
+
+        return root;
+    }
+
     return createPortal(
         <div
             role='presentation'
@@ -102,20 +114,21 @@ const Modal = ({
         >
             <div
                 role="dialog"
+                aria-labelledby='dialog-title'
                 aria-modal="true"
-                onClick={(e) => e.stopPropagation()}
                 ref={dialogRef}
-                tabIndex={-1}
-                className={`dialog__box ${className} ${animation === "slide"
+                onClick={(e) => e.stopPropagation()}
+                className={`dialog__box ${animation === "slide"
                     ? "slideIn__animation"
                     : "popIn__animation"}`}
+                style={style}
             >
                 {onClose && <button className="dialog__closeBtn" onClick={handleClose}><X /></button>}
-                <h2 className="dialog__heading" >{title}</h2>
+                <h2 id='dialog-title' className="dialog__heading" >{title}</h2>
                 <div className="dialog__content" >{children}</div>
             </div>
         </div>,
-        document.getElementById("modal-root"),
+        getModalRoot(),
     );
 };
 
