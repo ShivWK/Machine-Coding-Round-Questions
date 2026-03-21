@@ -9,7 +9,8 @@ const Modal = ({
     children,
     style,
     animation = "pop",
-    title
+    title,
+    description
 }) => {
     const lastFocusedElement = useRef(null);
     const backdropRef = useRef(null);
@@ -59,32 +60,49 @@ const Modal = ({
     }, [animation, onClose, allowOutsideAccess])
 
     useEffect(() => {
-        if (open) {
-            lastFocusedElement.current = document.activeElement;
+        if (!open || !dialogRef.current) return;
+
+        const focusableElements = dialogRef.current.querySelectorAll(
+            'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])'
+        )
+
+        lastFocusedElement.current = document.activeElement;
+        lockOutsideAccess()
+
+        if (!focusableElements.length) {
             dialogRef.current?.focus();
-            lockOutsideAccess()
+            return;
         }
 
-        // Below will not run on time, before which component will unmount. When open becomes false, the modal unmounts before the effect can run, so the cleanup logic inside the effect never executes.
+        const firstEle = focusableElements[0];
+        const lastEle = focusableElements[focusableElements.length - 1];
 
-        // else {
-        //     allowOutsideAccess()
-        //     lastFocusedElement.current?.focus();
-        // }
-    }, [open, lockOutsideAccess]);
+        firstEle.focus()
 
-    useEffect(() => {
-        if (!open) return;
+        const handleTab = (e) => {
+            if (e.key === "Escape") handleClose();
 
-        const handleKeyPress = (e) => {
-            if (e.key === 'Escape') handleClose();
-        };
+            if (e.key !== "Tab") return;
 
-        document.addEventListener('keyup', handleKeyPress);
-        return () => {
-            document.removeEventListener('keyup', handleKeyPress);
-        };
-    }, [open, handleClose]);
+            if (e.shiftKey) {
+                if (document.activeElement === firstEle) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    lastEle.focus();
+                }
+            } else {
+                if (document.activeElement === lastEle) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    firstEle.focus();
+                }
+            }
+        }
+
+        document.addEventListener("keydown", handleTab);
+
+        return () => document.removeEventListener("keydown", handleTab)
+    }, [open, handleClose, lockOutsideAccess])
 
     useEffect(() => {
         return () => {
@@ -115,7 +133,9 @@ const Modal = ({
             <div
                 role="dialog"
                 aria-labelledby='dialog-title'
+                aria-describedby='dialog-description'
                 aria-modal="true"
+                tabIndex={-1}
                 ref={dialogRef}
                 onClick={(e) => e.stopPropagation()}
                 className={`dialog__box ${animation === "slide"
@@ -123,8 +143,16 @@ const Modal = ({
                     : "popIn__animation"}`}
                 style={style}
             >
-                {onClose && <button className="dialog__closeBtn" onClick={handleClose}><X /></button>}
+                {onClose &&
+                    <button
+                        aria-label='Close dialog'
+                        className="dialog__closeBtn"
+                        onClick={handleClose}
+                    >
+                        <X />
+                    </button>}
                 <h2 id='dialog-title' className="dialog__heading" >{title}</h2>
+                <p id="dialog-description">{description}</p>
                 <div className="dialog__content" >{children}</div>
             </div>
         </div>,

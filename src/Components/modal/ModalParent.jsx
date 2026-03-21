@@ -5,7 +5,7 @@ const ModalParent = () => {
     const [openModal, setOpenModal] = useState(false);
 
     const style = {
-        backgroundColor: "red",
+        // backgroundColor: "red",
     }
 
     return (
@@ -15,6 +15,7 @@ const ModalParent = () => {
                 open={openModal}
                 onClose={() => setOpenModal(false)}
                 title={"New Modal Box"}
+                description={"Modal Description"}
                 animation="slide"
                 style={style}
             >
