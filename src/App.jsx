@@ -2,7 +2,8 @@
 // import PaginationFirstParent from "./components/pagination/PaginationFirstParent";
 // import PaginationSecondParent from "./components/pagination/PaginationSecondParent";
 // import InfiniteScrollParent from "./components/infinite_scroll/InfiniteScrollParent"
-import ModalParent from "./components/modal/ModalParent"
+// import ModalParent from "./components/modal/ModalParent"
+import AutoCompleteParent from "./components/autocomplete/AutoCompleteParent"
 
 function App() {
   return (
@@ -10,7 +11,8 @@ function App() {
     // <PaginationFirstParent />
     // <PaginationSecondParent />
     // <InfiniteScrollParent />
-    <ModalParent />
+    // <ModalParent />
+    <AutoCompleteParent />
   )
 }
 

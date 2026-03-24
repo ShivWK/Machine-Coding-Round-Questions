@@ -1,6 +1,15 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 body {
     background-color: rgb(48, 47, 47);
-    /* border: 2px solid red; */
+}
+
+html, body {
+    height: 100vh;
 }
 
 p,
@@ -13,4 +22,8 @@ span {
     top: 20px !important;
     left: 20px !important;
     background-color: aqua !important;
+}
+
+#root {
+    height: 100%;
 }
