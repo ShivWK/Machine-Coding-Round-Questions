@@ -8,36 +8,83 @@
 
 .autocomplete__container {
     position: relative;
-
+    margin-top: -10rem;
 }
 
 .autocomplete__form {
     display: flex;
     align-items: center;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 60px;
+    overflow: hidden;
+    border: 3px solid rgb(39, 111, 245);
 }
 
 .autocomplete__search--input {
     background-color: transparent;
-    padding-left: 1rem;
-    padding-right: .3rem;
-    padding-block: .5rem;
+    padding-left: 1.2rem;
+    padding-right: .2rem;
+    padding-block: .4rem;
     border: none;
     outline: none;
-    font-size: large;
+    font-size: medium;
+    width: 24rem;
 }
 
 .autocomplete__closeBtn {
     background-color: transparent;
-    color: black;
+    color: rgb(95, 95, 95);
     border: none;
+    border-radius: 50%;
     outline: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 0.2rem;
 }
 
-.animation__spin {
+.autocomplete__submitBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: .4rem;
+    padding-right: .7rem;
+    border: none;
+    outline: none;
+    background: rgb(39, 111, 245);
+    color: white;
+    cursor: pointer;
+    margin-right: -1px;
+}
+
+.autocomplete__search--spinner {
+    height: 23px;
+    width: 23px;
+    border-radius: 50%;
+    border-top: 3px solid white;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;
+    border-left: 3px solid transparent;
     animation : spin .8s linear infinite;
+}
+
+.autocomplete__suggestions {
+    position: absolute;
+    top: 105%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem;
+    background-color: gray;
+    border-radius: 5px;
+    width: 90%;
+    height: auto;
+    max-height: 15rem;
+    overflow: auto;
+}
+
+.margin-right-md {
+    margin-right: 1.75rem;
 }
 
 @keyframes spin {

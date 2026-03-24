@@ -3,10 +3,17 @@ import "./autocomplete.css";
 
 const AutoCompleteParent = () => {
 
-  const fetchSuggestion = async () => {
-    // API https://dummyjson.com/recipes/search?q=Mango
+  const fetchSuggestion = async (searchTerm) => {
+    try {
+      const response = await fetch(`https://dummyjson.com/recipes/search?q=${searchTerm}`)
+      const result = await response.json();
+      
+      return result.recipes;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
- 
+
   return (
     <div className="autocomplete__parent">
       <AutoComplete
