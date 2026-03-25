@@ -1,11 +1,38 @@
-import React from 'react'
+import { Search } from "lucide-react";
+import "./autocomplete.css";
 
-const Suggestion = () => {
+const Suggestion = ({ data, dataKey, onSelect, highlight }) => {
+
+  const highLightPart = (suggestion, highlight) => {
+    const parts = suggestion.split(new RegExp(`(${highlight})`, "gi"))
+
+    return <span>
+      {
+        parts.map((text, i) => {
+          return text.toLowerCase() === highlight.toLowerCase()
+            ? <strong key={i}>{text}</strong>
+            : text
+        })
+      }
+    </span>
+  }
+
   return (
-    <div>
-        
-    </div>
+    <ul>
+      {
+        data.map((recipe) => {
+          return <li
+            className="autocomplete__suggestion"
+            key={recipe.id}
+            onMouseDown={() => onSelect(recipe[dataKey])}
+          >
+            <Search aria-hidden="true" size={15} />
+            {highLightPart(recipe[dataKey], highlight)}
+          </li>
+        })
+      }
+    </ul>
   )
 }
 
-export default Suggestion
+export default Suggestion;

@@ -66,7 +66,7 @@
     border-right: 3px solid white;
     border-bottom: 3px solid white;
     border-left: 3px solid transparent;
-    animation : spin .8s linear infinite;
+    animation: spin .8s linear infinite;
 }
 
 .autocomplete__suggestions {
@@ -74,17 +74,45 @@
     top: 105%;
     left: 50%;
     transform: translateX(-50%);
-    padding: 1rem;
-    background-color: gray;
+    padding: .3rem;
+    background-color: rgb(255, 255, 255);
     border-radius: 5px;
     width: 90%;
     height: auto;
     max-height: 15rem;
     overflow: auto;
+
+    p {
+        color: black;
+    }
+}
+
+.autocomplete__suggestion {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px;
+    border-radius: 3px;
+    color: rgb(73, 72, 72);
+    cursor: pointer;
+
+    &:hover {
+        background-color: rgb(39, 111, 245);
+        color: white;
+
+        span {
+            color: white;
+        }
+    }
+
+    span {
+        color: black;
+        font-size: small;
+    }
 }
 
 .margin-right-md {
-    margin-right: 1.75rem;
+    margin-right: 1.47rem;
 }
 
 @keyframes spin {
