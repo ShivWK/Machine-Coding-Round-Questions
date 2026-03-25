@@ -111,17 +111,12 @@
     }
 }
 
-.suggestions-loader {
+.suggestions-status {
     display: flex;
     align-items: center;
     justify-content: center;
     color: rgb(73, 72, 72);
     font-size: small;
-
-    span {
-        color: rgb(73, 72, 72);
-        font-size: small;
-    }
 }
 
 .margin-right-md {

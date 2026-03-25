@@ -2,13 +2,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Suggestion from "./Suggestion";
 import "./autocomplete.css";
 import { Search, X } from "lucide-react";
+import useCache from "../../hooks/useCache";
 
 const AutoComplete = ({
   placeholder,
   fetchSuggestion,
   dataKey,
   staticData,
-  onSelect
+  onSelect,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedData, setSearchedData] = useState([]);
@@ -17,6 +18,9 @@ const AutoComplete = ({
   const [searchLoading, setSearchLoading] = useState(false);
   const [suggestionLoading, setSuggestionLoading] = useState(false);
   const [suggestionsError, setSuggestionsError] = useState("");
+  const [isEmpty, setIsEmpty] = useState(false)
+
+  const [setCache, getCache] = useCache("suggestion", 3600)
 
   const containerRef = useRef(null);
   const controllerRef = useRef(null);
@@ -40,6 +44,16 @@ const AutoComplete = ({
   }
 
   const getSuggestions = useCallback(async (searchTerm) => {
+    setSuggestionsError("");
+    setIsEmpty(false);
+
+    const cachedResponse = getCache(searchTerm);
+    console.log("cache", cachedResponse)
+    if (cachedResponse) {
+      setSuggestions(cachedResponse);
+      return;
+    }
+
     if (controllerRef.current) {
       controllerRef.current.abort();
     }
@@ -57,19 +71,21 @@ const AutoComplete = ({
       }
 
       if (!result.length) {
-        setSuggestionsError("No Results")
+        setIsEmpty(true);
+      } else {
+        setSuggestions(result);
+        setCache(searchTerm, result)
       }
-      setSuggestions(result);
     } catch (err) {
       console.log(err.name)
       if (err.name !== "AbortError") {
         console.log(err);
-        setSuggestionsError(err.message)
+        setSuggestionsError("Something went wrong")
       }
     } finally {
       setSuggestionLoading(false)
     }
-  }, [fetchSuggestion, staticData])
+  }, [fetchSuggestion, staticData, getCache, setCache])
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -91,12 +107,7 @@ const AutoComplete = ({
   }
 
   useEffect(() => {
-    setSuggestionsError("")
-
-    if (searchTerm.length < 2) {
-      setSuggestions([])
-      return;
-    }
+    if (searchTerm.length < 2) return;
 
     const timer = setTimeout(() => getSuggestions(searchTerm), 300);
 
@@ -104,6 +115,21 @@ const AutoComplete = ({
       clearTimeout(timer);
     }
   }, [searchTerm, getSuggestions])
+
+  const getSuggestionStatus = (text) => {
+    return <div className="suggestions-status">
+      <p>{text}</p>
+    </div>
+  }
+
+  console.log(searchedData);
+
+  const clearHandler = () => {
+    setSearchTerm("");
+    setSuggestions([]);
+    setSuggestionsError("");
+    setIsEmpty(false);
+  }
 
   return (
     <div ref={containerRef} className="autocomplete__container">
@@ -127,7 +153,7 @@ const AutoComplete = ({
             className="autocomplete__closeBtn"
             aria-label="Clear input"
             type="button"
-            onClick={() => setSearchTerm("")}
+            onClick={clearHandler}
           >
             <X aria-hidden="true" size={20} />
           </button>
@@ -147,15 +173,10 @@ const AutoComplete = ({
       </form>
 
       {
-        ((suggestions.length || suggestionsError || suggestionLoading) && showSuggestions) && <div className="autocomplete__suggestions">
-          {suggestionsError && <div className="suggestions-loader">
-            <p>{suggestionsError}</p>
-          </div>}
-          {suggestionLoading
-            && <div className="suggestions-loader">
-              <span>Loading suggestions...</span>
-            </div>
-          }
+        ((suggestions.length || suggestionsError || suggestionLoading || isEmpty) && showSuggestions) && <div className="autocomplete__suggestions">
+          {suggestionsError && getSuggestionStatus(suggestionsError)}
+          {suggestionLoading && getSuggestionStatus("Loading suggestions...")}
+          {isEmpty && getSuggestionStatus("No result")}
           <Suggestion
             data={suggestions}
             dataKey={dataKey}

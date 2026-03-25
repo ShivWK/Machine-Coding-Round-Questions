@@ -10,7 +10,7 @@ const Suggestion = ({ data, dataKey, onSelect, highlight }) => {
       {
         parts.map((text, i) => {
           return text.toLowerCase() === highlight.toLowerCase()
-            ? <strong key={i}>{text}</strong>
+            ? <strong key={i} style={{color: "rgb(20, 97, 240)"}}>{text}</strong>
             : text
         })
       }
@@ -22,10 +22,9 @@ const Suggestion = ({ data, dataKey, onSelect, highlight }) => {
       {
         data.map((recipe) => {
           return <li
-            tabIndex="0"
             className="autocomplete__suggestion"
             key={recipe.id}
-            onMouseDown={() => onSelect(recipe[dataKey])}
+            onClick={() => onSelect(recipe[dataKey])}
           >
             <Search aria-hidden="true" size={15} />
             {highLightPart(recipe[dataKey], highlight)}
