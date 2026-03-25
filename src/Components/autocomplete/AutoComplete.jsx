@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Suggestion from "./Suggestion";
 import "./autocomplete.css";
 import { Search, X } from "lucide-react";
@@ -18,40 +18,64 @@ const AutoComplete = ({
   const [suggestionLoading, setSuggestionLoading] = useState(false);
   const [suggestionsError, setSuggestionsError] = useState("");
 
+  const containerRef = useRef(null);
+  const controllerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Even if the listener is attached once, the referenced DOM node can become null later due to unmounting or re-renders, so I guard access inside the handler.
+      if (!containerRef.current) return;
+      if (!containerRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
   const inputChangeHandler = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
   }
 
-  const clearInputHandler = () => {
-    setSearchTerm("");
-  }
-
   const getSuggestions = useCallback(async (searchTerm) => {
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
+
+    const controller = new AbortController();
+    controllerRef.current = controller;
+
     setSuggestionLoading(true)
     let result;
     try {
       if (staticData) {
         result = staticData.filter(item => item.toLowerCase().includes(searchTerm.toLowerCase()))
       } else {
-        result = await fetchSuggestion(searchTerm);
+        result = await fetchSuggestion(searchTerm, controller.signal);
       }
 
+      if (!result.length) {
+        setSuggestionsError("No Results")
+      }
       setSuggestions(result);
     } catch (err) {
-      console.log(err);
-      setSuggestionsError(err.message)
+      console.log(err.name)
+      if (err.name !== "AbortError") {
+        console.log(err);
+        setSuggestionsError(err.message)
+      }
     } finally {
       setSuggestionLoading(false)
     }
   }, [fetchSuggestion, staticData])
 
-  const submitHandler = async () => {
+  const submitHandler = async (e) => {
+    e.preventDefault();
     setSearchLoading(true)
     try {
-      const response = await onSelect();
-      const result = await response.json();
-
+      const result = await onSelect();
       setSearchedData(result);
     } catch (err) {
       console.log(err);
@@ -62,13 +86,15 @@ const AutoComplete = ({
 
   const selectHandler = (text) => {
     setSearchTerm(text);
+    setShowSuggestions(false)
     submitHandler(text);
   }
 
   useEffect(() => {
+    setSuggestionsError("")
+
     if (searchTerm.length < 2) {
       setSuggestions([])
-      setSuggestionsError("")
       return;
     }
 
@@ -79,10 +105,8 @@ const AutoComplete = ({
     }
   }, [searchTerm, getSuggestions])
 
-  console.log("Data", searchedData)
-
   return (
-    <div className="autocomplete__container">
+    <div ref={containerRef} className="autocomplete__container">
       <form
         role="search"
         onSubmit={submitHandler}
@@ -96,7 +120,6 @@ const AutoComplete = ({
           autoComplete="off"
           className={`autocomplete__search--input ${!searchTerm && "margin-right-md"}`}
           onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setShowSuggestions(false)}
         />
 
         {
@@ -104,7 +127,7 @@ const AutoComplete = ({
             className="autocomplete__closeBtn"
             aria-label="Clear input"
             type="button"
-            onClick={clearInputHandler}
+            onClick={() => setSearchTerm("")}
           >
             <X aria-hidden="true" size={20} />
           </button>
@@ -112,19 +135,27 @@ const AutoComplete = ({
 
         <button
           className="autocomplete__submitBtn"
-          aria-label="Search" disabled={searchLoading || suggestionLoading}
+          aria-label="Search"
+          disabled={searchLoading}
         >
           {
-            (searchLoading || suggestionLoading)
+            (searchLoading)
               ? <span className="autocomplete__search--spinner"></span>
-              : <Search size={23} />
+              : <Search size={20} />
           }
         </button>
       </form>
 
       {
-        ((suggestions.length || suggestionsError) && showSuggestions) && <div className="autocomplete__suggestions">
-          {suggestionsError && <p>{suggestionsError}</p>}
+        ((suggestions.length || suggestionsError || suggestionLoading) && showSuggestions) && <div className="autocomplete__suggestions">
+          {suggestionsError && <div className="suggestions-loader">
+            <p>{suggestionsError}</p>
+          </div>}
+          {suggestionLoading
+            && <div className="suggestions-loader">
+              <span>Loading suggestions...</span>
+            </div>
+          }
           <Suggestion
             data={suggestions}
             dataKey={dataKey}

@@ -3,9 +3,11 @@ import "./autocomplete.css";
 
 const AutoCompleteParent = () => {
 
-  const fetchSuggestion = async (searchTerm) => {
+  const fetchSuggestion = async (searchTerm, signal) => {
     try {
-      const response = await fetch(`https://dummyjson.com/recipes/search?q=${searchTerm}`)
+      const response = await fetch(`https://dummyjson.com/recipes/search?q=${searchTerm}`, {
+        signal
+      })
       const result = await response.json();
 
       if (!response.ok) {
@@ -14,6 +16,7 @@ const AutoCompleteParent = () => {
       
       return result.recipes;
     } catch (err) {
+      if (err.name === "AbortError") throw err;
       throw new Error(err);
     }
   }

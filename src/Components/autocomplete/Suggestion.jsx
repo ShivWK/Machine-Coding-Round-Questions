@@ -22,6 +22,7 @@ const Suggestion = ({ data, dataKey, onSelect, highlight }) => {
       {
         data.map((recipe) => {
           return <li
+            tabIndex="0"
             className="autocomplete__suggestion"
             key={recipe.id}
             onMouseDown={() => onSelect(recipe[dataKey])}
