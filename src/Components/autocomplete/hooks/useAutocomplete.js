@@ -19,23 +19,7 @@ const useAutocomplete = ({
 
     const [setCache, getCache] = useCache("suggestion", 3600)
 
-    const containerRef = useRef(null);
     const controllerRef = useRef(null);
-
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            // Even if the listener is attached once, the referenced DOM node can become null later due to unmounting or re-renders, so I guard access inside the handler.
-            if (!containerRef.current) return;
-            if (!containerRef.current.contains(e.target)) {
-                setShowSuggestions(false);
-                setIsEmpty(false)
-                setSuggestionsError(false);
-            }
-        }
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside)
-    }, [])
 
     useEffect(() => {
         setSelectedIndex(-1)
@@ -163,9 +147,10 @@ const useAutocomplete = ({
         isEmpty,
         showSuggestions,
         selectedIndex,
-        containerRef,
         setSearchTerm,
-        setShowSuggestions
+        setShowSuggestions,
+        setSuggestionsError,
+        setIsEmpty,
     }
 }
 

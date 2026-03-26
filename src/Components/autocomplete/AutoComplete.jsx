@@ -1,15 +1,10 @@
+import { useEffect, useRef } from "react";
 import Suggestion from "./Suggestion";
 import "./autocomplete.css";
 import { Search, X } from "lucide-react";
 import useAutocomplete from "./hooks/useAutocomplete";
 
-const AutoComplete = ({
-  placeholder,
-  fetchSuggestion,
-  dataKey,
-  staticData,
-  onSelect,
-}) => {
+const AutoComplete = (props) => {
   const { searchTerm,
     handleKeydown,
     clearHandler,
@@ -22,14 +17,28 @@ const AutoComplete = ({
     isEmpty,
     showSuggestions,
     selectedIndex,
-    containerRef,
     setSearchTerm,
-    setShowSuggestions } = useAutocomplete({
-      fetchSuggestion,
-      dataKey,
-      staticData,
-      onSelect,
-    })
+    setShowSuggestions,
+    setSuggestionsError,
+    setIsEmpty, } = useAutocomplete(props)
+
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Even if the listener is attached once, the referenced DOM node can become null later due to unmounting or re-renders, so I guard access inside the handler.
+      if (!containerRef.current) return;
+      if (!containerRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+        setIsEmpty(false)
+        setSuggestionsError(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
 
   const status = (text) => {
     return <div role="status" aria-live="polite" className="suggestions-status">
@@ -48,7 +57,7 @@ const AutoComplete = ({
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder={placeholder + "..."}
+          placeholder={props.placeholder + "..."}
           autoComplete="off"
           className={`autocomplete__search--input ${!searchTerm && "margin-right-md"}`}
           onFocus={() => setShowSuggestions(true)}
@@ -105,7 +114,7 @@ const AutoComplete = ({
             >
               <Suggestion
                 data={suggestions}
-                dataKey={dataKey}
+                dataKey={props.dataKey}
                 onSelect={selectHandler}
                 highlight={searchTerm}
                 selectedIndex={selectedIndex}
