@@ -13,7 +13,7 @@ const getInitialCache = (key) => {
 const normalize = (query) => query.toLowerCase().trim()
 
 const useCache = (key, expirationTimeInSeconds) => {
-    const cache = useRef(getInitialCache());
+    const cache = useRef(getInitialCache(key));
 
     const setCache = (query, data) => {
         const normalizedQuery = normalize(query);

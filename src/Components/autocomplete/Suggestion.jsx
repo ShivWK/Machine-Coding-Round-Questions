@@ -1,7 +1,18 @@
+import { useEffect, useRef } from "react";
 import { Search } from "lucide-react";
 import "./autocomplete.css";
 
-const Suggestion = ({ data, dataKey, onSelect, highlight }) => {
+const Suggestion = ({ data, dataKey, onSelect, highlight, selectedIndex }) => {
+  const optionRef = useRef([])
+
+  useEffect(() => {
+    if (selectedIndex >= 0 && optionRef.current[selectedIndex]) {
+      optionRef.current[selectedIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      })
+    }
+  }, [selectedIndex])
 
   const highLightPart = (suggestion, highlight) => {
     const parts = suggestion.split(new RegExp(`(${highlight})`, "gi"))
@@ -10,7 +21,7 @@ const Suggestion = ({ data, dataKey, onSelect, highlight }) => {
       {
         parts.map((text, i) => {
           return text.toLowerCase() === highlight.toLowerCase()
-            ? <strong key={i} style={{color: "rgb(20, 97, 240)"}}>{text}</strong>
+            ? <strong key={i}>{text}</strong>
             : text
         })
       }
@@ -20,11 +31,15 @@ const Suggestion = ({ data, dataKey, onSelect, highlight }) => {
   return (
     <ul>
       {
-        data.map((recipe) => {
+        data.map((recipe, i) => {
           return <li
+            ref={(ele) => optionRef.current[i] = ele}
+            id={`option-${i}`}
+            role="option"
+            aria-selected={selectedIndex === i}
             className="autocomplete__suggestion"
             key={recipe.id}
-            onClick={() => onSelect(recipe[dataKey])}
+            onClick={() => onSelect(recipe[dataKey], i)}
           >
             <Search aria-hidden="true" size={15} />
             {highLightPart(recipe[dataKey], highlight)}

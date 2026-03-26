@@ -19,6 +19,7 @@ const AutoComplete = ({
   const [suggestionLoading, setSuggestionLoading] = useState(false);
   const [suggestionsError, setSuggestionsError] = useState("");
   const [isEmpty, setIsEmpty] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const [setCache, getCache] = useCache("suggestion", 3600)
 
@@ -31,12 +32,18 @@ const AutoComplete = ({
       if (!containerRef.current) return;
       if (!containerRef.current.contains(e.target)) {
         setShowSuggestions(false);
+        setIsEmpty(false)
+        setSuggestionsError(false);
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
+
+  useEffect(() => {
+    setSelectedIndex(-1)
+  }, [suggestions])
 
   const inputChangeHandler = (e) => {
     const value = e.target.value;
@@ -88,7 +95,8 @@ const AutoComplete = ({
   }, [fetchSuggestion, staticData, getCache, setCache])
 
   const submitHandler = async (e) => {
-    e.preventDefault();
+    if (e?.preventDefault) e.preventDefault();
+
     setSearchLoading(true)
     try {
       const result = await onSelect();
@@ -100,13 +108,15 @@ const AutoComplete = ({
     }
   }
 
-  const selectHandler = (text) => {
+  const selectHandler = (text, i) => {
     setSearchTerm(text);
     setShowSuggestions(false)
     submitHandler(text);
+    setSelectedIndex(i)
   }
 
   useEffect(() => {
+    setSelectedIndex(-1)
     if (searchTerm.length < 2) return;
 
     const timer = setTimeout(() => getSuggestions(searchTerm), 300);
@@ -116,12 +126,6 @@ const AutoComplete = ({
     }
   }, [searchTerm, getSuggestions])
 
-  const getSuggestionStatus = (text) => {
-    return <div className="suggestions-status">
-      <p>{text}</p>
-    </div>
-  }
-
   console.log(searchedData);
 
   const clearHandler = () => {
@@ -129,6 +133,31 @@ const AutoComplete = ({
     setSuggestions([]);
     setSuggestionsError("");
     setIsEmpty(false);
+  }
+
+  const handleKeydown = (e) => {
+    switch (e.key) {
+      case "ArrowDown": {
+        setSelectedIndex(prv => prv === -1 || prv === suggestions.length - 1 ? 0 : prv + 1)
+        break;
+      }
+
+      case "ArrowUp": {
+        setSelectedIndex(prv => prv === -1 || prv === 0 ? suggestions.length - 1 : prv - 1)
+        break;
+      }
+
+      case "Enter": {
+        if (selectedIndex >= 0) {
+          selectHandler(suggestions[selectedIndex][dataKey], selectedIndex)
+        }
+
+        break;
+      }
+
+      default:
+        break;
+    }
   }
 
   return (
@@ -146,6 +175,13 @@ const AutoComplete = ({
           autoComplete="off"
           className={`autocomplete__search--input ${!searchTerm && "margin-right-md"}`}
           onFocus={() => setShowSuggestions(true)}
+          onKeyDown={handleKeydown}
+
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={showSuggestions}
+          aria-controls="suggestions-list"
+          aria-activedescendant={selectedIndex !== -1 ? `option-${selectedIndex}` : undefined}
         />
 
         {
@@ -167,22 +203,48 @@ const AutoComplete = ({
           {
             (searchLoading)
               ? <span className="autocomplete__search--spinner"></span>
-              : <Search size={20} />
+              : <Search aria-hidden="true" size={20} />
           }
         </button>
       </form>
 
       {
-        ((suggestions.length || suggestionsError || suggestionLoading || isEmpty) && showSuggestions) && <div className="autocomplete__suggestions">
-          {suggestionsError && getSuggestionStatus(suggestionsError)}
-          {suggestionLoading && getSuggestionStatus("Loading suggestions...")}
-          {isEmpty && getSuggestionStatus("No result")}
-          <Suggestion
-            data={suggestions}
-            dataKey={dataKey}
-            onSelect={selectHandler}
-            highlight={searchTerm}
-          />
+        ((suggestions.length || suggestionsError || suggestionLoading || isEmpty) && showSuggestions) && <div className="autocomplete__suggestions-wrapper">
+          {
+            suggestionsError && (
+              <div role="status" aria-live="polite" className="suggestions-status">
+                <p>{suggestionsError}</p>
+              </div>
+            )}
+
+          {
+            suggestionLoading &&
+            <div role="status" aria-live="polite" className="suggestions-status">
+              <p>Loading suggestion...</p>
+            </div>
+          }
+          {
+            isEmpty &&
+            <div role="status" aria-live="polite" className="suggestions-status">
+              <p>No result</p>
+            </div>
+          }
+
+          {
+            suggestions.length > 0 &&
+            <div
+              id="suggestions-list"
+              role="listBox"
+            >
+              <Suggestion
+                data={suggestions}
+                dataKey={dataKey}
+                onSelect={selectHandler}
+                highlight={searchTerm}
+                selectedIndex={selectedIndex}
+              />
+            </div>
+          }
         </div>
       }
     </div>

@@ -69,7 +69,7 @@
     animation: spin .8s linear infinite;
 }
 
-.autocomplete__suggestions {
+.autocomplete__suggestions-wrapper {
     position: absolute;
     top: 105%;
     left: 50%;
@@ -96,7 +96,7 @@
     color: rgb(73, 72, 72);
     cursor: pointer;
 
-    &:hover {
+    &:hover, &[aria-selected="true"] {
         background-color: rgb(39, 111, 245);
         color: white;
 
