@@ -1,4 +1,4 @@
-import useToast from "../../hooks/useToast"
+import useToast from "./hooks/useToast"
 
 const Toast = () => {
   const { ToastContainer, triggerToast } = useToast("bottom-mid")

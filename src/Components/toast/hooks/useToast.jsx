@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ToastItem from "../components/toast/ToastItem";
+import ToastItem from "../ToastItem";
 import { createPortal } from "react-dom";
 import "../components/toast/toast.css";
 
