@@ -14,11 +14,16 @@ const normalize = (query) => query.toLowerCase().trim()
 
 const useCache = (key, expirationTimeInSeconds) => {
     const cache = useRef(getInitialCache(key));
+    const MAX_SIZE = 50;
 
     const setCache = (query, data) => {
         const normalizedQuery = normalize(query);
         const timeStamp = getCurrentTimeStamp();
         cache.current[normalizedQuery] = { data, timeStamp };
+
+        if (Object.keys(cache.current).length > MAX_SIZE) {
+            delete cache.current[Object.keys(cache.current)[0]];
+        }
 
         localStorage.setItem(key, JSON.stringify(cache.current))
     }
