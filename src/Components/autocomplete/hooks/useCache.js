@@ -21,8 +21,10 @@ const useCache = (key, expirationTimeInSeconds) => {
         const timeStamp = getCurrentTimeStamp();
         cache.current[normalizedQuery] = { data, timeStamp };
 
-        if (Object.keys(cache.current).length > MAX_SIZE) {
-            delete cache.current[Object.keys(cache.current)[0]];
+        const keys = Object.keys(cache.current);
+
+        if (keys.length > MAX_SIZE) {
+            delete cache.current[keys[0]];
         }
 
         localStorage.setItem(key, JSON.stringify(cache.current))
