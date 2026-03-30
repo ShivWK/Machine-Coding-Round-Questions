@@ -1,0 +1,30 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.accordion__parent {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 10rem;
+}
+
+.accordion {
+    border: 2px solid red;
+    height: auto;
+}
+
+.accordion__item {
+
+}
+
+.accordion__item-title {
+
+}
+
+.accordion__item-description {
+
+}
