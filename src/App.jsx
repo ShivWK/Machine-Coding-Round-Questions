@@ -5,6 +5,7 @@
 // import ModalParent from "./components/modal/ModalParent"
 // import AutoCompleteParent from "./components/autocomplete/AutoCompleteParent"
 import AccordionParent from "./components/accordion/accordionParent"
+import Otp from "./components/otp/OtpComponent"
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
     // <InfiniteScrollParent />
     // <ModalParent />
     // <AutoCompleteParent />
-    <AccordionParent />
+    // <AccordionParent />
+    <Otp count={4} />
   )
 }
 
