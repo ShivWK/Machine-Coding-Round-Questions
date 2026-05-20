@@ -9,15 +9,11 @@ const Otp = ({ count = 4, onComplete }) => {
     const inputRef = useRef([]);
 
     const moveFocusRight = (index) => {
-        if (inputRef.current[index + 1]) {
-            inputRef.current[index + 1].focus();
-        }
+        inputRef.current[index + 1]?.focus();
     }
 
     const moveFocusLeft = (index) => {
-        if (inputRef.current[index - 1]) {
-            inputRef.current[index - 1]?.focus();
-        }
+        inputRef.current[index - 1]?.focus();
     }
 
     const checkCompletion = (updatedOtp) => {
@@ -65,9 +61,7 @@ const Otp = ({ count = 4, onComplete }) => {
     const handlePaste = (e) => {
         e.preventDefault();
 
-        const pastedData = e.clipboardData.getData("text").replace(/\s+/g, "").trim();
-
-        if (!/^\d+$/.test(pastedData)) return;
+        const pastedData = e.clipboardData.getData("text").replace(/\D+/g, "").trim();
 
         const pastedArray = pastedData.slice(0, count).split("");
         const newOtp = [...otp];
@@ -97,6 +91,8 @@ const Otp = ({ count = 4, onComplete }) => {
                         return <input
                             key={index}
                             type="text"
+                            maxLength={1} // may give error verify by the frontend master
+                            aria-label={`OTP digit ${index + 1}`}
                             autoComplete="one-time-code"
                             value={otp[index]}
                             inputMode="numeric"
@@ -110,7 +106,7 @@ const Otp = ({ count = 4, onComplete }) => {
                 }
             </div>
 
-            <button onClick={onComplete} disabled={!otp.every(otp => otp !== "")} className="otp-verification-btn">
+            <button onClick={() => onComplete(otp.join(""))} disabled={!otp.every(value => value !== "")} className="otp-verification-btn">
                 Verify OTP
             </button>
         </div>
