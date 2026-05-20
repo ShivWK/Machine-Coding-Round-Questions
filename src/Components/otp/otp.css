@@ -13,8 +13,10 @@
     padding: 30px;
 }
 
-.otp-parent h1 {
-    /* margin-top: 15px; */
+.otp-verification-btn {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 .otp-container {

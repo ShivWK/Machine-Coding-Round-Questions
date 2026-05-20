@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./otp.css";
 
-const Otp = ({ count = 4 }) => {
+const Otp = ({ count = 4, onComplete }) => {
     const numberOfDigits = Array.from({ length: Number(count) }, (_, i) => i);
     const [otp, setOtp] = useState(new Array(count).fill(""));
     // Filling with "" prevents undefined values.
@@ -20,22 +20,31 @@ const Otp = ({ count = 4 }) => {
         }
     }
 
+    const checkCompletion = (updatedOtp) => {
+        if (updatedOtp.every(val => val !== "")) {
+            onComplete?.(updatedOtp.join(""));
+        }
+    }
+
     const handleInputChange = (e, index) => {
         const value = e.target.value.trim();
         if (value && !/^\d+$/.test(value)) return;
 
-        const newArray = [...otp];
-        newArray[index] = value.slice(-1);
-        setOtp(newArray);
+        const newOtp = [...otp];
+        newOtp[index] = value.slice(-1);
+        setOtp(newOtp);
 
         if (value) {
             moveFocusRight(index);
         }
+
+        checkCompletion(newOtp);
     }
 
     const handleOnKeyDown = (e, index) => {
         if (e.key === "Backspace") {
             e.preventDefault();
+
             const newOtp = [...otp];
 
             if (otp[index]) {
@@ -53,6 +62,28 @@ const Otp = ({ count = 4 }) => {
         }
     }
 
+    const handlePaste = (e) => {
+        e.preventDefault();
+
+        const pastedData = e.clipboardData.getData("text").replace(/\s+/g, "").trim();
+
+        if (!/^\d+$/.test(pastedData)) return;
+
+        const pastedArray = pastedData.slice(0, count).split("");
+        const newOtp = [...otp];
+
+        pastedArray.forEach((digit, index) => {
+            newOtp[index] = digit;
+        })
+
+        setOtp(newOtp);
+        const lastIndex = Math.min(pastedArray.length, count) - 1;
+
+        inputRef.current[lastIndex]?.focus();
+
+        checkCompletion(newOtp);
+    }
+
     useEffect(() => {
         inputRef.current[0]?.focus();
     }, [])
@@ -66,16 +97,22 @@ const Otp = ({ count = 4 }) => {
                         return <input
                             key={index}
                             type="text"
+                            autoComplete="one-time-code"
                             value={otp[index]}
                             inputMode="numeric"
                             onChange={(e) => handleInputChange(e, index)}
                             onKeyDown={(e) => handleOnKeyDown(e, index)}
+                            onPaste={handlePaste}
                             className="otp-input"
                             ref={(ele) => inputRef.current[index] = ele}
                         />
                     })
                 }
             </div>
+
+            <button onClick={onComplete} disabled={!otp.every(otp => otp !== "")} className="otp-verification-btn">
+                Verify OTP
+            </button>
         </div>
     )
 }

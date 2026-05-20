@@ -16,7 +16,7 @@ function App() {
     // <ModalParent />
     // <AutoCompleteParent />
     // <AccordionParent />
-    <Otp count={4} />
+    <Otp count={4} onComplete={(otp) => {console.log(otp)}} />
   )
 }
 
