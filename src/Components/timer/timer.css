@@ -35,6 +35,10 @@
     cursor: pointer;
 }
 
+.timer-button:disabled {
+    opacity: 50%;
+}
+
 .timer-output {
     font-size: 30px;
     outline: none;
