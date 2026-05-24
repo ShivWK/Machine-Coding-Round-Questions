@@ -102,9 +102,9 @@ const Timer = () => {
                             const data = config[orderKey];
 
                             return <div key={orderKey} className="timer-input-parent-wrapper">
-                                    <span className="timer-label">
-                                        {orderKey.toUpperCase()}
-                                    </span>
+                                <span className="timer-label">
+                                    {orderKey.toUpperCase()}
+                                </span>
                                 <div className="timer-input-wrapper">
                                     <input
                                         disabled={isRunning || isPaused}
@@ -126,28 +126,28 @@ const Timer = () => {
                 {/* {isRunning && <div className="timer-output">
                     {milliseconds.toString()}
                 </div>} */}
+            </div>
 
-                <div className="timer-controls">
-                    <button
-                        onClick={handleStart}
-                        disabled={isPaused || isRunning}
-                        className="timer-button timer-button-start"
-                    >
-                        Start
-                    </button>
+            <div className="timer-controls">
+                <button
+                    onClick={handleStart}
+                    disabled={isPaused || isRunning}
+                    className="timer-button timer-button-start"
+                >
+                    Start
+                </button>
 
-                    {isRunning && <button onClick={handlePause} className="timer-button timer-button-pause">
-                        Pause
-                    </button>}
+                {isRunning && <button onClick={handlePause} className="timer-button timer-button-pause">
+                    Pause
+                </button>}
 
-                    {isPaused && <button onClick={handleResume} className="timer-button timer-button-resume">
-                        Resume
-                    </button>}
+                {isPaused && <button onClick={handleResume} className="timer-button timer-button-resume">
+                    Resume
+                </button>}
 
-                    <button onClick={handleReset} className="timer-button timer-button-reset">
-                        Reset
-                    </button>
-                </div>
+                <button onClick={handleReset} className="timer-button timer-button-reset">
+                    Reset
+                </button>
             </div>
         </div>
     )
