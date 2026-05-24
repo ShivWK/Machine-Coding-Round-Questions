@@ -1,32 +1,32 @@
 export const TimeFactors = {
-    Hour: "hh",
-    Minute: "mm",
-    Second: "ss",
-    MilliSeconds: "ms"
+    Hour: "Hour",
+    Minute: "Minute",
+    Second: "Second",
+    MilliSeconds: "MilliSeconds"
 }
 
 export const Config = {
     [TimeFactors.Hour]: {
         value: "",
         factor: 60 * 60 * 1000,
-        placeholder: "HH"
+        placeholder: "00",
     },
 
     [TimeFactors.Minute]: {
         value: "",
         factor: 60 * 1000,
-        placeholder: "MM"
+        placeholder: "00",
     },
 
     [TimeFactors.Second]: {
         value: "",
         factor: 1000,
-        placeholder: "SS"
+        placeholder: "00",
     },
 
     // [TimeFactors.MilliSeconds]: {
     //     value: "",
     //     factor: 1,
-    //     placeholder: "MS"
+    //     placeholder: "00",
     // },
 }

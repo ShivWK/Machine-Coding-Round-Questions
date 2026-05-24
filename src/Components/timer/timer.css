@@ -28,21 +28,57 @@
 }
 
 .timer-button {
-    padding: 5px 10px;
-    background: #000;
+    padding: 5px 15px;
     color: white;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+}
+
+.timer-button-start {
+    background: #03b10c;
+    color: white;
+}
+
+.timer-button-pause {
+    background: #caa306;
+    color: white;
+}
+
+.timer-button-resume {
+    background: #03b10c;
+    color: white;
+}
+
+.timer-button-reset {
+    background: #ff0000;
+    color: white;
 }
 
 .timer-button:disabled {
     opacity: 50%;
 }
 
+.timer-label {
+    font-size: 18px;
+    font-weight: 400;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+}
+
 .timer-output {
     font-size: 30px;
     outline: none;
     border: none;
+    width: 100%;
+}
+
+.timer-input-parent-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
     width: 100%;
 }
 

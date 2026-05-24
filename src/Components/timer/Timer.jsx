@@ -12,23 +12,18 @@ const Timer = () => {
 
     const OrderOfTimer = [TimeFactors.Hour, TimeFactors.Minute, TimeFactors.Second];
 
-    const resetTimer = () => {
-        clearInterval(interval.current);
-
-        setIsRunning(false);
-        setIsPaused(false);
-        setTotalSeconds(0);
-
-        setConfig(structuredClone(Config));
-    }
-
     useEffect(() => {
         if (!isRunning) return;
 
         interval.current = setInterval(() => {
             setTotalSeconds(prv => {
                 if (prv <= 1) {
-                    resetTimer()
+                    clearInterval(interval.current);
+
+                    setIsRunning(false);
+                    setIsPaused(false);
+                    setConfig(structuredClone(Config));
+
                     return 0;
                 }
 
@@ -44,6 +39,8 @@ const Timer = () => {
     const handleChange = (e, { key }) => {
         const value = e.target.value;
         if (value && !/^\d+$/.test(value)) return;
+
+        if ((key === TimeFactors.Minute || key === TimeFactors.Second) && Number(value) > 59) return;
 
         setConfig((prv) => ({
             ...prv,
@@ -79,13 +76,24 @@ const Timer = () => {
         setIsPaused(false);
     }
 
+    const handleReset = () => {
+        clearInterval(interval.current);
+
+        setIsRunning(false);
+        setIsPaused(false);
+        setTotalSeconds(0);
+
+        setConfig(structuredClone(Config));
+    }
+
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
+    // const milliseconds = (totalSeconds * 1000) % 1000;
 
     return (
         <div className="timer-parent">
-            <h1>Timer</h1>
+            <h1>Countdown Timer</h1>
 
             <div>
                 <div className="timer-container">
@@ -93,40 +101,50 @@ const Timer = () => {
                         OrderOfTimer.map((orderKey, index) => {
                             const data = config[orderKey];
 
-                            return <div key={orderKey} className="timer-input-wrapper">
-                                <input
-                                    disabled={isRunning || isPaused}
-                                    onChange={(e) => handleChange(e, { key: orderKey, index })}
-                                    value={(isRunning || isPaused) ?
-                                        [hours, minutes, seconds][index].toString().padStart(2, "0")
-                                        : data.value}
-                                    type="text"
-                                    placeholder={data.placeholder}
-                                    className="timer-output"
-                                />
+                            return <div key={orderKey} className="timer-input-parent-wrapper">
+                                    <span className="timer-label">
+                                        {orderKey.toUpperCase()}
+                                    </span>
+                                <div className="timer-input-wrapper">
+                                    <input
+                                        disabled={isRunning || isPaused}
+                                        autoComplete="on"
+                                        onChange={(e) => handleChange(e, { key: orderKey })}
+                                        value={(isRunning || isPaused) ?
+                                            [hours, minutes, seconds][index].toString().padStart(2, "0")
+                                            : data.value}
+                                        type="text"
+                                        placeholder={data.placeholder}
+                                        className="timer-output"
+                                    />
+                                </div>
                             </div>
                         })
                     }
                 </div>
 
+                {/* {isRunning && <div className="timer-output">
+                    {milliseconds.toString()}
+                </div>} */}
+
                 <div className="timer-controls">
                     <button
                         onClick={handleStart}
                         disabled={isPaused || isRunning}
-                        className="timer-button"
+                        className="timer-button timer-button-start"
                     >
                         Start
                     </button>
 
-                    {isRunning && <button onClick={handlePause} className="timer-button">
+                    {isRunning && <button onClick={handlePause} className="timer-button timer-button-pause">
                         Pause
                     </button>}
 
-                    {isPaused && <button onClick={handleResume} className="timer-button">
+                    {isPaused && <button onClick={handleResume} className="timer-button timer-button-resume">
                         Resume
                     </button>}
 
-                    <button onClick={resetTimer} className="timer-button">
+                    <button onClick={handleReset} className="timer-button timer-button-reset">
                         Reset
                     </button>
                 </div>
