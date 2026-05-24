@@ -1,38 +1,42 @@
 import { useState, useRef, useEffect } from "react";
 import "./timer.css";
-import { TimeFactors, Config } from "./utils";
+import { TimeFactors, Config, OrderOfTimer } from "./utils";
 
 const Timer = () => {
     const [config, setConfig] = useState(structuredClone(Config));
-    const [totalSeconds, setTotalSeconds] = useState(0);
+    const [totalMilliSeconds, setTotalMilliSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
 
-    const interval = useRef(null)
+    const interval = useRef(null);
 
-    const OrderOfTimer = [TimeFactors.Hour, TimeFactors.Minute, TimeFactors.Second];
+    const stopTimer = () => {
+        clearInterval(interval.current);
+        interval.current = null;
+
+        setIsRunning(false);
+        setIsPaused(false);
+    }
 
     useEffect(() => {
         if (!isRunning) return;
 
         interval.current = setInterval(() => {
-            setTotalSeconds(prv => {
-                if (prv <= 1) {
-                    clearInterval(interval.current);
-
-                    setIsRunning(false);
-                    setIsPaused(false);
+            setTotalMilliSeconds(prv => {
+                if (prv <= 10) {
+                    stopTimer();
                     setConfig(structuredClone(Config));
 
                     return 0;
                 }
 
-                return prv - 1;
+                return Math.max(0, prv - 10);
             })
-        }, 1000)
+        }, 10)
 
         return () => {
             clearInterval(interval.current)
+            interval.current = null;
         }
     }, [isRunning])
 
@@ -56,40 +60,39 @@ const Timer = () => {
         const minutes = Number(config[TimeFactors.Minute].value || 0);
         const seconds = Number(config[TimeFactors.Second].value || 0);
 
-        const total = hour * 3600 + minutes * 60 + seconds;
+        const total = hour * 3600 * 1000 + minutes * 60 * 1000 + seconds * 1000;
 
         if (total <= 0) return;
-        setTotalSeconds(total);
+
+        setTotalMilliSeconds(total);
         setIsRunning(true);
     }
 
     const handlePause = () => {
         clearInterval(interval.current);
+        interval.current = null;
 
         setIsRunning(false);
         setIsPaused(true);
     }
 
     const handleResume = () => {
-        if (totalSeconds <= 0) return;
+        if (totalMilliSeconds <= 0) return;
         setIsRunning(true);
         setIsPaused(false);
     }
 
     const handleReset = () => {
-        clearInterval(interval.current);
-
-        setIsRunning(false);
-        setIsPaused(false);
-        setTotalSeconds(0);
+        stopTimer();
+        setTotalMilliSeconds(0);
 
         setConfig(structuredClone(Config));
     }
 
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    // const milliseconds = (totalSeconds * 1000) % 1000;
+    const hours = Math.floor(totalMilliSeconds / (3600 * 1000));
+    const minutes = Math.floor((totalMilliSeconds % (3600 * 1000)) / (60 * 1000));
+    const seconds = Math.floor((totalMilliSeconds % (60 * 1000)) / 1000);
+    // const milliseconds = (totalMilliSeconds % 1000) / 10;
 
     return (
         <div className="timer-parent">
@@ -123,19 +126,20 @@ const Timer = () => {
                     }
                 </div>
 
-                {/* {isRunning && <div className="timer-output">
-                    {milliseconds.toString()}
-                </div>} */}
+                {/* {(isRunning || isPaused) && (
+                    <div className="timer-seconds-output">
+                        <p className="timer-seconds">{milliseconds.toString().padStart(2, "0")}</p>
+                    </div>
+                )} */}
             </div>
 
             <div className="timer-controls">
-                <button
+                {(!isPaused && !isRunning) && <button
                     onClick={handleStart}
-                    disabled={isPaused || isRunning}
                     className="timer-button timer-button-start"
                 >
                     Start
-                </button>
+                </button>}
 
                 {isRunning && <button onClick={handlePause} className="timer-button timer-button-pause">
                     Pause
