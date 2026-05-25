@@ -35,17 +35,23 @@ function StarRating({ value = 0, onChange, count = NUMBER_OF_STARS }) {
           }
 
           return (
-            <span
+            <button
               key={index}
+              aria-label={`Rate ${index + 1} star${index > 0 && "s"}`}
               className={`star ${className}`}
               onClick={() => clickHandler(index)}
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={() => setHoveredValue(-1)}
             >
               &#9733;
-            </span>
+            </button>
           )
         })}
+      </div>
+      <div aria-live="polite">
+        <p className='selected-rating'>
+          Selected Rating: {clickedValue + 1}
+        </p>
       </div>
     </div>
   )
