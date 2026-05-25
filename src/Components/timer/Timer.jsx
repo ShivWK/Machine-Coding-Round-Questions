@@ -7,6 +7,7 @@ const Timer = () => {
     const [totalMilliSeconds, setTotalMilliSeconds] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
+    const [isCompleted, setIsCompleted] = useState(false);
 
     const interval = useRef(null);
 
@@ -26,7 +27,7 @@ const Timer = () => {
                 if (prv <= 10) {
                     stopTimer();
                     setConfig(structuredClone(Config));
-
+                    setIsCompleted(true);
                     return 0;
                 }
 
@@ -65,6 +66,7 @@ const Timer = () => {
         if (total <= 0) return;
 
         setTotalMilliSeconds(total);
+        setIsCompleted(false);
         setIsRunning(true);
     }
 
@@ -85,6 +87,7 @@ const Timer = () => {
     const handleReset = () => {
         stopTimer();
         setTotalMilliSeconds(0);
+        setIsCompleted(false);
 
         setConfig(structuredClone(Config));
     }
@@ -105,11 +108,12 @@ const Timer = () => {
                             const data = config[orderKey];
 
                             return <div key={orderKey} className="timer-input-parent-wrapper">
-                                <span className="timer-label">
+                                <label htmlFor={orderKey} className="timer-label">
                                     {orderKey.toUpperCase()}
-                                </span>
+                                </label>
                                 <div className="timer-input-wrapper">
                                     <input
+                                        id={orderKey}
                                         disabled={isRunning || isPaused}
                                         autoComplete="on"
                                         onChange={(e) => handleChange(e, { key: orderKey })}
@@ -117,6 +121,7 @@ const Timer = () => {
                                             [hours, minutes, seconds][index].toString().padStart(2, "0")
                                             : data.value}
                                         type="text"
+                                        inputMode="numeric"
                                         placeholder={data.placeholder}
                                         className="timer-output"
                                     />
@@ -153,8 +158,14 @@ const Timer = () => {
                     Reset
                 </button>
             </div>
+
+            <div aria-live="assertive">
+                {totalMilliSeconds === 10000
+                    && <p className="sr-only">10 seconds remaining</p>}
+                {isCompleted && <p>Time's up!</p>}
+            </div>
         </div>
     )
 }
 
-export default Timer
+export default Timer;
