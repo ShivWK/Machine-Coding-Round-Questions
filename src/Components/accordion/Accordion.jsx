@@ -14,7 +14,7 @@ const Accordion = ({ allowMultiple = true }) => {
         {
             id: 2,
             title: "What is useState?",
-            content: "useState is a React hook to manage state."
+            content: "useState is a React hook to manage state. React hook to manage state. React hook to manage state."
         },
         {
             id: 3,
@@ -47,15 +47,17 @@ const Accordion = ({ allowMultiple = true }) => {
     console.log(openIndex)
 
     return (
-        <div className="accordion">
-            {
-                data.map((item, index) => <AccordionItem
-                    key={item.id}
-                    item={item}
-                    isOpen={openIndex.includes(index)}
-                    onClick={() => handleToggle(index)}
-                />)
-            }
+        <div className="accordion__parent">
+            <div className="accordion">
+                {
+                    data.map((item, index) => <AccordionItem
+                        key={item.id}
+                        item={item}
+                        isOpen={openIndex.includes(index)}
+                        onClick={() => handleToggle(index)}
+                    />)
+                }
+            </div>
         </div>
     )
 }

@@ -4,10 +4,11 @@
 // import InfiniteScrollParent from "./components/infinite_scroll/InfiniteScrollParent"
 // import ModalParent from "./components/modal/ModalParent"
 // import AutoCompleteParent from "./components/autocomplete/AutoCompleteParent"
-// import AccordionParent from "./components/accordion/accordionParent"
+import Accordion from "./components/accordion/Accordion";
 // import Otp from "./components/otp/OtpComponent"
 // import Timer from "./components/timer/Timer";
-import StarRating from "./components/star_rating/StarRating";
+// import StarRatingFull from "./components/star_rating/StarRatingFull";
+// import StarRatingHalf from "./components/star_rating/StarRatingHalf";
 
 function App() {
   return (
@@ -17,10 +18,10 @@ function App() {
     // <InfiniteScrollParent />
     // <ModalParent />
     // <AutoCompleteParent />
-    // <AccordionParent />
+    <Accordion />
     // <Otp count={4} onComplete={(otp) => {console.log(otp)}} />
     // <Timer />
-    <StarRating value={0} onChange={(value) => {console.log(value)}} count={5} />
+    // <StarRatingFull value={0} onChange={(value) => {console.log(value)}} count={5} />
   )
 }
 

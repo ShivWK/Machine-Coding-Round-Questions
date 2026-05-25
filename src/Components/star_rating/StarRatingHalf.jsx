@@ -3,7 +3,7 @@ import "./styles.css";
 
 const NUMBER_OF_STARS = 5;
 
-function StarRating({ value = 0, onChange, count = NUMBER_OF_STARS }) {
+function StarRatingHalf({ value = 0, onChange, count = NUMBER_OF_STARS }) {
   const [clickedValue, setClickedValue] = useState(value - 1);
   const [hoveredValue, setHoveredValue] = useState(-1);
 
@@ -57,4 +57,4 @@ function StarRating({ value = 0, onChange, count = NUMBER_OF_STARS }) {
   )
 }
 
-export default StarRating;
+export default StarRatingHalf;

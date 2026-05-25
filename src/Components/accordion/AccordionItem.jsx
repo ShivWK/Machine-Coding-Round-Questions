@@ -4,8 +4,9 @@ import "./accordion.css";
 const AccordionItem = ({ item, onClick, isOpen }) => {
     return (
         <div className='accordion__item'>
-            <button onClick={onClick}>
-                {item.title}
+            <button className='accordion__item-title' onClick={onClick}>
+                <span>{item.title}</span>
+                <span>&#8964;</span>
             </button>
             <AnimatedContent isOpen={isOpen}>
                 {item.content}
@@ -27,13 +28,9 @@ const AnimatedContent = ({ isOpen, children }) => {
         }
     }, [isOpen])
 
-    return <div style={{
-        height: height,
-        overflow: "hidden",
-        transition: "height .3s ease"
-    }}>
+    return <div className='accordion__item-content' style={{ height: height }}>
         <div ref={containerRef}>
-            <p>{children}</p>
+            <p className='accordion__item-description'>{children}</p>
         </div>
     </div>
 }
