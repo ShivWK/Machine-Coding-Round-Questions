@@ -6,7 +6,8 @@
 // import AutoCompleteParent from "./components/autocomplete/AutoCompleteParent"
 // import AccordionParent from "./components/accordion/accordionParent"
 // import Otp from "./components/otp/OtpComponent"
-import Timer from "./components/timer/Timer"
+// import Timer from "./components/timer/Timer";
+import StarRating from "./components/star_rating/StarRating";
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
     // <AutoCompleteParent />
     // <AccordionParent />
     // <Otp count={4} onComplete={(otp) => {console.log(otp)}} />
-    <Timer />
+    // <Timer />
+    <StarRating value={0} onChange={(value) => {console.log(value)}} count={5} />
   )
 }
 
